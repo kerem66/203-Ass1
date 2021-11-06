@@ -3,7 +3,6 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
-#include <bits/stdc++.h>
 using namespace std;
 void printArray(int **a){
 
@@ -154,8 +153,98 @@ void secondPart(string fileName){
     printArray(array);
     cout<< total<< endl;
 }
+bool checkLeft(int **array, int row , int column, int value, int size){
+    bool found = false;
+    if(column-1>=0){
+        if(array[row][column-1] == value){
+            found = true;
+        }
+    }
+    return found;
+}
+bool checkRight(int **array, int row , int column, int value, int size){
+    bool found = false;
+    if(column+1<size){
+        if(array[row][column+1] == value){
+            found = true;
+        }
+    }
+    return found;
+}
+bool checkBottom(int **array, int row , int column, int value, int size){
+    bool found = false;
+    if(row+1<size){
+        if(array[row+1][column] == value){
+            found = true;
+        }
+    }
+    return found;
+}
+bool checkUp(int **array, int row , int column, int value, int size){
+    bool found = false;
+    if(row-1>=0){
+        if(array[row-1][column] == value){
+            found = true;
+        }
+    }
+    return found;
+}
+void placeValues (int** array, int row , int column, int value , int* total, int size){
+    array[row][column] = value;
+    int foundSameValues = 0;
+    if(checkUp(array,row,column,value,size)){
+        foundSameValues++;
+    }
+}
+void firstPart(string filename){
+    ifstream file(filename);
+    if(!file) {
+        cout << "Cannot open input file.\n";
+        exit(1);
+    }
+    string str;
+    int size = 0;
+    int count = 0;
+    int total = 0;
+    if (getline(file, str)){
+        size = stoi(str);
+    }
+    int** array = new int*[size];
+    for(int i = 0 ; i<size ; i++){ //creating 2d array
+        array[i] = new int[size];
+    }
+    for(int i = 0 ; i<size ; i++){ // initalizing array with -1 as empty values
+        for(int j = 0 ; j<size ; j++){
+            array[i][j] = 0;
+        }
+    }
+    while (getline(file, str)) {
+            stringstream ss(str);
+            string word;
+            int row = -1;
+            int column = -1;
+            int value = -1;
+            while (ss >> word) {
+                if(value != -1){
+                    if(row!= -1){
+                        column = stoi(word);
+                    }else{
+                        row = stoi(word);
+                    }
+                }else{
+                    value = stoi(word);
+                }
+            }
+            cout<< "row : " << row << ", column: " << column << " value: " << value << endl;
+            placeValues(array, row, column, value, &total, size);
+        
+    }
+    file.close();
+    printArray(array);
+}
 int main(int argc, char **argv) {
-    secondPart(argv[2]);
+    firstPart("input1.txt");
+    //secondPart("input2.txt");
 //    ifstream file("input1.txt");
 //    if(!file) {
 //        cout << "Cannot open input file.\n";
